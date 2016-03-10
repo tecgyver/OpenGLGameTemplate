@@ -1,0 +1,182 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{286745A6-546B-4747-AB5F-7B8A82DF0084}</ProjectGuid>
+    <RootNamespace>OpenGLTemplate</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v120</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v120</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <OutDir>$(SolutionDir)build-$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)build-$(Configuration)\</IntDir>
+    <PostBuildEventUseInBuild>false</PostBuildEventUseInBuild>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <OutDir>$(SolutionDir)build-$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)build-$(Configuration)\</IntDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>$(SolutionDir)ext/include;$(ProjectDir)include;$(IncludePath)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>$(SolutionDir)ext\lib;$(SolutionDir)ext\lib\Debug;$(LibraryPath)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>opengl32.lib;glfw3.lib;glfw3dll.lib;glew32.lib;FreeImage.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <SubSystem>Console</SubSystem>
+    </Link>
+    <PreBuildEvent>
+      <Command>
+      </Command>
+    </PreBuildEvent>
+    <PostBuildEvent>
+      <Command>xcopy /y /s "..\dlls" "$(IntDir)"
+xcopy /y /s "..\res" "$(IntDir)res\"
+xcopy /y /s "..\shaders" "$(IntDir)shaders\"</Command>
+    </PostBuildEvent>
+    <CustomBuildStep>
+      <Command>xcopy /y "..\dlls" "$(IntDir)"
+xcopy /y /s "..\dlls\Debug" "$(IntDir)"
+xcopy /y /s "..\res" "$(IntDir)res\"
+xcopy /y /s "..\shaders" "$(IntDir)shaders\"</Command>
+    </CustomBuildStep>
+    <CustomBuildStep>
+      <Outputs>willneverbefound.whatever;%(Outputs)</Outputs>
+    </CustomBuildStep>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>$(SolutionDir)ext/include;$(ProjectDir)include;$(IncludePath)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalLibraryDirectories>$(SolutionDir)ext\lib;$(SolutionDir)ext\lib\Release;$(LibraryPath)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>opengl32.lib;glfw3.lib;glfw3dll.lib;glew32.lib;FreeImage.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <SubSystem>Console</SubSystem>
+    </Link>
+    <PreBuildEvent>
+      <Command>
+      </Command>
+    </PreBuildEvent>
+    <CustomBuildStep>
+      <Command>xcopy /y "..\dlls" "$(IntDir)"
+xcopy /y /s "..\dlls\Release" "$(IntDir)"
+xcopy /y /s "..\res" "$(IntDir)res\"
+xcopy /y /s "..\shaders" "$(IntDir)shaders\"</Command>
+    </CustomBuildStep>
+    <CustomBuildStep>
+      <Outputs>willneverbefound.whatever;%(Outputs)</Outputs>
+    </CustomBuildStep>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="AABB.cpp" />
+    <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="clippingplane.cpp" />
+    <ClCompile Include="DisplayManager.cpp" />
+    <ClCompile Include="Entity.cpp" />
+    <ClCompile Include="FrameBuffer.cpp" />
+    <ClCompile Include="GuiRenderer.cpp" />
+    <ClCompile Include="GuiShader.cpp" />
+    <ClCompile Include="GuiTexture.cpp" />
+    <ClCompile Include="Keyboard.cpp" />
+    <ClCompile Include="Light.cpp" />
+    <ClCompile Include="Loader.cpp" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="MainGameLoop.cpp" />
+    <ClCompile Include="MasterRenderer.cpp" />
+    <ClCompile Include="Maths.cpp" />
+    <ClCompile Include="ModelData.cpp" />
+    <ClCompile Include="ModelTexture.cpp" />
+    <ClCompile Include="mouse.cpp" />
+    <ClCompile Include="OBJLoader.cpp" />
+    <ClCompile Include="RawModel.cpp" />
+    <ClCompile Include="EntityRenderer.cpp" />
+    <ClCompile Include="ShaderProgram.cpp" />
+    <ClCompile Include="StaticShader.cpp" />
+    <ClCompile Include="Terrain.cpp" />
+    <ClCompile Include="TerrainRenderer.cpp" />
+    <ClCompile Include="TerrainShader.cpp" />
+    <ClCompile Include="TexturedModel.cpp" />
+    <ClCompile Include="Vertex.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="AABB.h" />
+    <ClInclude Include="Camera.h" />
+    <ClInclude Include="clippingplane.h" />
+    <ClInclude Include="DisplayManager.h" />
+    <ClInclude Include="Entity.h" />
+    <ClInclude Include="FrameBuffer.h" />
+    <ClInclude Include="GuiRenderer.h" />
+    <ClInclude Include="GuiShader.h" />
+    <ClInclude Include="GuiTexture.h" />
+    <ClInclude Include="include\DisplayManager.h" />
+    <ClInclude Include="Keyboard.h" />
+    <ClInclude Include="Light.h" />
+    <ClInclude Include="Loader.h" />
+    <ClInclude Include="MainGameLoop.h" />
+    <ClInclude Include="MasterRenderer.h" />
+    <ClInclude Include="Maths.h" />
+    <ClInclude Include="ModelData.h" />
+    <ClInclude Include="ModelTexture.h" />
+    <ClInclude Include="mouse.h" />
+    <ClInclude Include="OBJLoader.h" />
+    <ClInclude Include="RawModel.h" />
+    <ClInclude Include="EntityRenderer.h" />
+    <ClInclude Include="resource.h" />
+    <ClInclude Include="ShaderProgram.h" />
+    <ClInclude Include="StaticShader.h" />
+    <ClInclude Include="Terrain.h" />
+    <ClInclude Include="TerrainRenderer.h" />
+    <ClInclude Include="TerrainShader.h" />
+    <ClInclude Include="TexturedModel.h" />
+    <ClInclude Include="Vertex.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="OpenGLTemplate.rc" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
