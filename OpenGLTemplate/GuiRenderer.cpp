@@ -1,6 +1,7 @@
 #include "GuiRenderer.h"
 #include "GLEW\glew.h"
 #include "Maths.h"
+#include "RenderController.h"
 
 
 using namespace renderEngine;
@@ -28,9 +29,12 @@ void GuiRenderer::render(std::vector<guis::GuiTexture*> &guis)
 	shader.start();
 	glBindVertexArray(mQuad->getVaoID());
 	glEnableVertexAttribArray(0);
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	glDisable(GL_DEPTH_TEST);
+	if (!RenderController::transparencyDisabled)
+	{
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		glDisable(GL_DEPTH_TEST);
+	}
 	for (auto* gui : guis)
 	{
 		glActiveTexture(GL_TEXTURE0);
@@ -40,8 +44,11 @@ void GuiRenderer::render(std::vector<guis::GuiTexture*> &guis)
 		shader.loadTransformationMatrix(matrix);
 		glDrawArrays(GL_TRIANGLE_STRIP, 0, mQuad->getVertexCount());
 	}
-	glEnable(GL_DEPTH_TEST);
-	glDisable(GL_BLEND);
+	if (!RenderController::transparencyDisabled)
+	{
+		glEnable(GL_DEPTH_TEST);
+		glDisable(GL_BLEND);
+	}
 	glDisableVertexAttribArray(0);
 	glBindVertexArray(0);
 	shader.stop();

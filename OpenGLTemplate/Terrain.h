@@ -12,11 +12,15 @@ namespace terrains
 		Terrain(int gridX, int gridZ, renderEngine::Loader& loader, textures::ModelTexture* _texture);
 		~Terrain();
 
+		glm::mat4 modelMatrix;
+		AABB aabb;
+
 		float getX();
 		float getZ();
 		models::RawModel* getModel();
 		textures::ModelTexture* getTexture();
 		void placeRandom(entities::Entity* entity);
+		void prepareModelMatrix();
 
 	private:
 		static const float SIZE;

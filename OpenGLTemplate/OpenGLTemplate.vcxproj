@@ -133,6 +133,7 @@ xcopy /y /s "..\shaders" "$(IntDir)shaders\"</Command>
     <ClCompile Include="OBJLoader.cpp" />
     <ClCompile Include="RawModel.cpp" />
     <ClCompile Include="EntityRenderer.cpp" />
+    <ClCompile Include="RenderController.cpp" />
     <ClCompile Include="ShaderProgram.cpp" />
     <ClCompile Include="StaticShader.cpp" />
     <ClCompile Include="Terrain.cpp" />
@@ -164,6 +165,7 @@ xcopy /y /s "..\shaders" "$(IntDir)shaders\"</Command>
     <ClInclude Include="OBJLoader.h" />
     <ClInclude Include="RawModel.h" />
     <ClInclude Include="EntityRenderer.h" />
+    <ClInclude Include="RenderController.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="ShaderProgram.h" />
     <ClInclude Include="StaticShader.h" />

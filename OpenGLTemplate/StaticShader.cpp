@@ -38,6 +38,12 @@ void StaticShader::getAllUniformLocations()
 	location_skyColor = getUniformLocation(std::string("skyColor"));
 	location_isTextured = getUniformLocation(std::string("isTextured"));
 	location_modelColor = getUniformLocation(std::string("modelColor"));
+	location_enableTransparency = getUniformLocation(std::string("enableTransparency"));
+}
+
+void StaticShader::loadEnableTransparency(bool enableTransparency)
+{
+	loadBoolean(location_enableTransparency, enableTransparency);
 }
 
 void StaticShader::loadIsTextured(bool isTextured)

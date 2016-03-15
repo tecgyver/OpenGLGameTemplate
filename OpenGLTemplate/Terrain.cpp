@@ -1,12 +1,14 @@
 #include "Terrain.h"
+#include "Maths.h"
 
 using namespace terrains;
 using namespace models;
 using namespace textures;
 using namespace renderEngine;
 using namespace entities;
+using namespace toolbox;
 
-const float Terrain::SIZE = 800;
+const float Terrain::SIZE = 200;
 const int Terrain::VERTEX_COUNT = 128;
 
 Terrain::Terrain(int gridX, int gridZ, Loader& loader, ModelTexture* _texture)
@@ -99,4 +101,11 @@ void Terrain::placeRandom(Entity* entity)
 float Terrain::getRandomFloat(float min, float max, int decimals, bool includeMax)
 {
 	return (fmod(rand(), ((max - min) * pow(10, decimals)) + (includeMax ? powf(10, -decimals) : 0)) / pow(10, decimals)) + min;
+}
+
+void Terrain::prepareModelMatrix()
+{
+	modelMatrix = glm::mat4();
+	Maths::createTransformationMatrix(modelMatrix, glm::vec3(x, 0, z), 0, 0, 0, 1);
+	model->aabb.getTransformed(modelMatrix, aabb);
 }

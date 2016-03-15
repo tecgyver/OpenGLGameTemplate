@@ -17,6 +17,7 @@ namespace shaders
 		void loadLight(entities::Light& light);
 		void loadShineVariables(float damper, float reflectivity);
 		void loadUseFakeLighting(bool useFakeLighting);
+		void loadEnableTransparency(bool useFakeLighting);
 		void loadSkyColor(float r, float g, float b);
 		void loadIsTextured(bool isTextured);
 		void loadModelColor(const glm::vec3& modelColor);
@@ -40,5 +41,6 @@ namespace shaders
 		int location_skyColor;
 		int location_isTextured;
 		int location_modelColor;
+		int location_enableTransparency;
 	};
 }

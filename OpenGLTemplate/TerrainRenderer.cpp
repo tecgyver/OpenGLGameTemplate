@@ -1,6 +1,7 @@
 #include "TerrainRenderer.h"
 #include "GLEW/glew.h"
 #include "Maths.h"
+#include "RenderController.h"
 
 using namespace renderEngine;
 using namespace terrains;
@@ -24,12 +25,24 @@ TerrainRenderer::~TerrainRenderer()
 
 void TerrainRenderer::render(std::vector<Terrain*>& terrainList)
 {
+	if (RenderController::showWireframe)
+	{
+		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	}
+	else
+	{
+		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	}
 	for (auto* terrain : terrainList)
 	{
 		prepareTerrain(terrain);
 		loadModelMatrix(terrain);
 		glDrawElements(GL_TRIANGLES, terrain->getModel()->getVertexCount(), GL_UNSIGNED_INT, 0);
 		unbindTexturedModel();
+	}
+	if (RenderController::showWireframe)
+	{
+		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	}
 }
 
@@ -46,6 +59,8 @@ void TerrainRenderer::prepareTerrain(Terrain* terrain)
 
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, texture->getID());
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, RenderController::minFilter);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, RenderController::magFilter);
 }
 
 void TerrainRenderer::unbindTexturedModel()
@@ -58,7 +73,5 @@ void TerrainRenderer::unbindTexturedModel()
 
 void TerrainRenderer::loadModelMatrix(Terrain* terrain)
 {
-	glm::mat4 transformationMatrix;
-	Maths::createTransformationMatrix(transformationMatrix, glm::vec3(terrain->getX(), 0, terrain->getZ()), 0, 0, 0, 1);
-	shader.loadTransformationMatrix(transformationMatrix);
+	shader.loadTransformationMatrix(terrain->modelMatrix);
 }

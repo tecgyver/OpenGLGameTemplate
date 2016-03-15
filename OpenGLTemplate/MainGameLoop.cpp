@@ -1,5 +1,6 @@
 #include <cstdlib> 
 #include <ctime>
+#include <iostream>
 
 #include "MainGameLoop.h"
 #include "DisplayManager.h"
@@ -15,6 +16,7 @@
 #include "FrameBuffer.h"
 #include "GuiTexture.h"
 #include "GuiRenderer.h"
+#include "RenderController.h"
 
 using namespace engineTester;
 using namespace objConverter;
@@ -48,12 +50,15 @@ void MainGameLoop::run()
 	std::vector<GuiTexture*> guis;
 
 	ModelTexture* terrainTexture = new ModelTexture(loader.loadTexture(std::string("grass.png"), GL_RGB));
-	int size = 1;
+	int size = 5;
+	Terrain* currentTerrain;
 	for (int x = -(size - 1) / 2; x <= (size - 1) / 2; x++)
 	{
 		for (int z = -(size - 1) / 2; z <= (size - 1) / 2; z++)
 		{
-			terrainList.push_back(new Terrain(x, z, loader, terrainTexture));
+			currentTerrain = new Terrain(x, z, loader, terrainTexture);
+			terrainList.push_back(currentTerrain);
+			currentTerrain->prepareModelMatrix();
 		}
 	}
 
@@ -68,11 +73,11 @@ void MainGameLoop::run()
 	TexturedModel* texturedGrassModel = new TexturedModel(grassModel, grassTexture);
 	for (auto* terrain : terrainList)
 	{
-		for (int i = 0; i < 0; i++)
+		for (int i = 0; i < 2000; i++)
 		{
-			auto* entity = new Entity(texturedGrassModel, glm::vec3(0, 0, 0), 0, 0, 0, 0.5f);
+			auto* entity = new Entity(texturedGrassModel, glm::vec3(0, 0, 0), 0, 0, 0, 0.5f, true);
 			//entity->position = glm::vec3(0, 1, 1);
-			//terrain->placeRandom(entity);
+			terrain->placeRandom(entity);
 			entitiesList.push_back(entity);
 		}
 	}
@@ -88,11 +93,11 @@ void MainGameLoop::run()
 	TexturedModel* texturedFernModel = new TexturedModel(fernModel, fernTexture);
 	for (auto* terrain : terrainList)
 	{
-		for (int i = 0; i < 0; i++)
+		for (int i = 0; i < 1000; i++)
 		{
-			auto* entity = new Entity(texturedFernModel, glm::vec3(0, 0, 0), 0, 0, 0, 0.2f);
+			auto* entity = new Entity(texturedFernModel, glm::vec3(0, 0, 0), 0, 0, 0, 0.2f, true);
 			//entity->position = glm::vec3(0, 1, 1);
-			//terrain->placeRandom(entity);
+			terrain->placeRandom(entity);
 			entitiesList.push_back(entity);
 		}
 	}
@@ -106,11 +111,11 @@ void MainGameLoop::run()
 	TexturedModel* texturedTreeModel = new TexturedModel(treeModel, treeTexture);
 	for (auto* terrain : terrainList)
 	{
-		for (int i = 0; i < 0; i++)
+		for (int i = 0; i < 50; i++)
 		{
-			auto* entity = new Entity(texturedTreeModel, glm::vec3(0, 0, 0), 0, 0, 0, 3.0f);
+			auto* entity = new Entity(texturedTreeModel, glm::vec3(0, 0, 0), 0, 0, 0, 3.0f, true);
 			//entity->position = glm::vec3(0, 1, 1);
-			//terrain->placeRandom(entity);
+			terrain->placeRandom(entity);
 			entitiesList.push_back(entity);
 		}
 	}
@@ -119,26 +124,47 @@ void MainGameLoop::run()
 	Light light(glm::vec3(0, 500, 0), glm::vec3(1, 1, 1));
 
 	Camera camera(0, 0, 0, false);
-	camera.position = glm::vec3(0, 0, 10);
+	camera.position = glm::vec3(0, 1, 10);
 
 	clock_t startTime = clock();
 	clock_t currentTime = startTime;
 	float timePassed;
+	float writeFpsTimeCount = 0;
+	int frames = 0;
 
-	ModelData* dragonData = OBJLoader::loadObjModel(std::string("dragon"), loader);
-	RawModel* dragonModel = loader.loadToVAO(dragonData->getVertices(), dragonData->getTextureCoords(), dragonData->getNormals(), dragonData->getIndices());
-	dragonModel->modelColor = glm::vec3(0.8f, 0.6f, 0.0f);
-	TexturedModel* texturedDragonModel = new TexturedModel(dragonModel, NULL);
-	Entity* dragonEntity = new Entity(texturedDragonModel, glm::vec3(0, 0, 0), 0, 0, 0, 1.f);
-	entitiesList.push_back(dragonEntity);
+	const float WRITE_FPS_SEC = 2.f;
+
+	//ModelData* dragonData = OBJLoader::loadObjModel(std::string("dragon"), loader);
+	//RawModel* dragonModel = loader.loadToVAO(dragonData->getVertices(), dragonData->getTextureCoords(), dragonData->getNormals(), dragonData->getIndices());
+	//dragonModel->modelColor = glm::vec3(0.8f, 0.6f, 0.0f);
+	//TexturedModel* texturedDragonModel = new TexturedModel(dragonModel, NULL);
+	//Entity* dragonEntity = new Entity(texturedDragonModel, glm::vec3(0, 0, 0), 0, 0, 0, 1.f);
+	//entitiesList.push_back(dragonEntity);
 
 	MasterRenderer renderer(DisplayManager::WIDTH, DisplayManager::HEIGHT, camera, loader);
 
 	GuiRenderer guiRenderer(loader);
 
+	GuiTexture* guiTest = new GuiTexture(grassTexture->getID(), glm::vec2(-0.8f, -0.8f), glm::vec2(0.1f, 0.1f));
+	guis.push_back(guiTest);
+
+
+	//Main loop
 	while (!DisplayManager::windowShouldClose())
 	{
+		RenderController::checkInput();
 		timePassed = ((float)(clock() - currentTime)) / CLOCKS_PER_SEC;
+		if (RenderController::showFPS)
+		{
+			writeFpsTimeCount += timePassed;
+			frames++;
+			if (writeFpsTimeCount > WRITE_FPS_SEC)
+			{
+				std::cout << frames / writeFpsTimeCount << " FPS" << std::endl;
+				writeFpsTimeCount = 0.f;
+				frames = 0;
+			}
+		}
 		currentTime = clock();
 		camera.move(timePassed);
 
@@ -147,6 +173,10 @@ void MainGameLoop::run()
 
 		DisplayManager::updateDisplay();
 	}
+
+
+
+
 	guiRenderer.cleanUp();
 	renderer.cleanup();
 	loader.cleanup();

@@ -4,6 +4,7 @@
 #include "GLM/gtc/matrix_transform.hpp"
 #include "ModelTexture.h"
 #include "MasterRenderer.h"
+#include "RenderController.h"
 
 
 using namespace renderEngine;
@@ -27,6 +28,15 @@ EntityRenderer::~EntityRenderer()
 
 void EntityRenderer::render(std::map<TexturedModel*, std::vector<Entity*>>& entitiesMap)
 {
+	if (RenderController::showWireframe)
+	{
+		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	}
+	else
+	{
+		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	}
+	shader.loadEnableTransparency(!RenderController::transparencyDisabled);
 	for (auto& keypair : entitiesMap)
 	{
 		if (keypair.first->getTexture() != NULL)
@@ -44,6 +54,10 @@ void EntityRenderer::render(std::map<TexturedModel*, std::vector<Entity*>>& enti
 			glDrawElements(GL_TRIANGLES, instance->model->getRawModel()->getVertexCount(), GL_UNSIGNED_INT, 0);
 		}
 		unbindTexturedModel();
+	}
+	if (RenderController::showWireframe)
+	{
+		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	}
 }
 
@@ -75,11 +89,13 @@ void EntityRenderer::prepareTexturedModel(models::TexturedModel* model)
 		MasterRenderer::disableBackfaceCulling();
 	shader.loadUseFakeLighting(texture->useFakeLighting);
 	shader.loadShineVariables(texture->shineDamper, texture->reflectivity);
-	shader.loadIsTextured(false);
+	shader.loadIsTextured(true);
 	shader.loadModelColor(rawModel->modelColor);
 
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, texture->getID());
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, RenderController::minFilter);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, RenderController::magFilter);
 }
 
 void EntityRenderer::unbindTexturedModel()
@@ -93,7 +109,5 @@ void EntityRenderer::unbindTexturedModel()
 
 void EntityRenderer::prepareInstance(entities::Entity* entity)
 {
-	glm::mat4 transformationMatrix;
-	Maths::createTransformationMatrix(transformationMatrix, entity->position, entity->rotX, entity->rotY, entity->rotZ, entity->scale);
-	shader.loadTransformationMatrix(transformationMatrix);
+	shader.loadTransformationMatrix(entity->modelMatrix);
 }

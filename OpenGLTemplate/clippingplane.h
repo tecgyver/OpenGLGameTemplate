@@ -7,7 +7,7 @@ class ClippingPlane
 public:
     ClippingPlane();
 
-    glm::vec3 position;
+	glm::vec3 normal;
     float distance;
 
     bool isCulled(const glm::vec3 &point);

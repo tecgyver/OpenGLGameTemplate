@@ -25,7 +25,7 @@ namespace renderEngine
         static void enableBackfaceCulling();
         static void disableBackfaceCulling();
 		void cleanup();
-        short isAABBinFrustum(AABB &aabb);
+		bool isAABBinFrustum(const AABB &aabb);
 		void prepare(std::vector<terrains::Terrain*> &terrainList, std::vector<entities::Entity*> &entityList);
 		void renderScene(entities::Light& sun, std::vector<terrains::Terrain*> &terrainList, std::vector<entities::Entity*> &entityList);
 		void processEntity(entities::Entity* entity);
@@ -37,6 +37,7 @@ namespace renderEngine
 		static const float RED;
 		static const float GREEN;
 		static const float BLUE;
+		static const bool TEST_FRUSTUM_CULLING;
 
 		Loader& loader;
         entities::Camera& camera;

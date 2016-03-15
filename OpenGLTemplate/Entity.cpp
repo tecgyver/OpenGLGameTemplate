@@ -1,9 +1,11 @@
 #include "Entity.h"
+#include "Maths.h"
 
 using namespace entities;
 using namespace models;
+using namespace toolbox;
 
-Entity::Entity(TexturedModel* _model, glm::vec3& _position, float _rotX, float _rotY, float _rotZ, float _scale)
+Entity::Entity(TexturedModel* _model, glm::vec3& _position, float _rotX, float _rotY, float _rotZ, float _scale, bool _staticEntity)
 {
 	model = _model;
 	position = _position;
@@ -11,6 +13,7 @@ Entity::Entity(TexturedModel* _model, glm::vec3& _position, float _rotX, float _
 	rotY = _rotY;
 	rotZ = _rotZ;
 	scale = _scale;
+	staticEntity = _staticEntity;
 }
 
 
@@ -30,4 +33,17 @@ void Entity::increaseRotation(float dx, float dy, float dz)
 	rotX += dx;
 	rotY += dy;
 	rotZ += dz;
+}
+
+void Entity::prepareModelMatrix()
+{
+	if (modelMatrixInitialized)
+		return;
+	modelMatrix = glm::mat4();
+	Maths::createTransformationMatrix(modelMatrix, position, rotX, rotY, rotZ, scale);
+	if (staticEntity)
+	{
+		modelMatrixInitialized = true;
+		model->getRawModel()->aabb.getTransformed(modelMatrix, aabb);
+	}
 }
