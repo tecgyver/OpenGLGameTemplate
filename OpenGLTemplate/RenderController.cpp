@@ -12,7 +12,7 @@ using namespace input;
 bool RenderController::showHelp = false;
 bool RenderController::showFPS = false;
 bool RenderController::showWireframe = false;
-int RenderController::minFilter = GL_LINEAR;
+int RenderController::minFilter = GL_LINEAR_MIPMAP_LINEAR;
 int RenderController::magFilter = GL_LINEAR;
 bool RenderController::viewfrustumCullingDisabled = false;
 bool RenderController::transparencyDisabled = false;
@@ -55,58 +55,29 @@ void RenderController::checkInput()
 		{
 			magFilter = GL_NEAREST;
 			std::cout << "textureSamplingQuality NEAREST" << std::endl;
-			if (minFilter == GL_LINEAR_MIPMAP_LINEAR)
-				minFilter = GL_NEAREST_MIPMAP_LINEAR;
-			else if (minFilter == GL_LINEAR_MIPMAP_NEAREST)
-				minFilter = GL_NEAREST_MIPMAP_NEAREST;
 		}
 		else
 		{
 			magFilter = GL_LINEAR;
 			std::cout << "textureSamplingQuality LINEAR" << std::endl;
-			if (minFilter == GL_NEAREST_MIPMAP_LINEAR)
-				minFilter = GL_LINEAR_MIPMAP_LINEAR;
-			else if (minFilter == GL_NEAREST_MIPMAP_NEAREST)
-				minFilter = GL_LINEAR_MIPMAP_NEAREST;
 		}
 	}
 	if (getKeyPressed(GLFW_KEY_F5))
 	{
-		if (magFilter == GL_LINEAR)
+		if (minFilter == GL_LINEAR_MIPMAP_LINEAR)
 		{
-			if (minFilter == GL_LINEAR_MIPMAP_LINEAR)
-			{
-				minFilter = GL_LINEAR;
-				std::cout << "mipMapQuality OFF" << std::endl;
-			}
-			else if (minFilter == GL_LINEAR)
-			{
-				minFilter = GL_LINEAR_MIPMAP_NEAREST;
-				std::cout << "mipMapQuality NEAREST" << std::endl;
-			}
-			else if (minFilter == GL_LINEAR_MIPMAP_NEAREST)
-			{
-				minFilter = GL_LINEAR_MIPMAP_LINEAR;
-				std::cout << "mipMapQuality LINEAR" << std::endl;
-			}
+			minFilter = GL_LINEAR;
+			std::cout << "mipMapQuality OFF" << std::endl;
 		}
-		else
+		else if (minFilter == GL_LINEAR)
 		{
-			if (minFilter == GL_NEAREST_MIPMAP_LINEAR)
-			{
-				minFilter = GL_LINEAR;
-				std::cout << "mipMapQuality OFF" << std::endl;
-			}
-			else if (minFilter == GL_LINEAR)
-			{
-				minFilter = GL_NEAREST_MIPMAP_NEAREST;
-				std::cout << "mipMapQuality NEAREST" << std::endl;
-			}
-			else if (minFilter == GL_NEAREST_MIPMAP_NEAREST)
-			{
-				minFilter = GL_NEAREST_MIPMAP_LINEAR;
-				std::cout << "mipMapQuality LINEAR" << std::endl;
-			}
+			minFilter = GL_LINEAR_MIPMAP_NEAREST;
+			std::cout << "mipMapQuality NEAREST" << std::endl;
+		}
+		else if (minFilter == GL_LINEAR_MIPMAP_NEAREST)
+		{
+			minFilter = GL_LINEAR_MIPMAP_LINEAR;
+			std::cout << "mipMapQuality LINEAR" << std::endl;
 		}
 	}
 	if (getKeyPressed(GLFW_KEY_F8))

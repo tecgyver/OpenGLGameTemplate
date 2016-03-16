@@ -73,7 +73,8 @@ ModelData* OBJLoader::loadObjModel(std::string& fileName, Loader& loader)
 			{
 				aiVector3D pos = mesh->mVertices[face.mIndices[k]];
 				aiVector3D uv = mesh->mTextureCoords[0][face.mIndices[k]];
-				aiVector3D normal = mesh->HasNormals() ? mesh->mNormals[face.mIndices[k]] : aiVector3D(1.0f, 1.0f, 1.0f);
+				aiVector3D normal = mesh->HasNormals() ? mesh->mNormals[face.mIndices[k]] : aiVector3D(1.0f, 0.0f, 0.0f);
+				//glm::vec3 glmNormal = glm::normalize(glm::vec3(normal.x, normal.y, normal.z);
 				vertices.push_back(pos.x);
 				vertices.push_back(pos.y);
 				vertices.push_back(pos.z);

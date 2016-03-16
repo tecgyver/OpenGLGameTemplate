@@ -67,7 +67,7 @@ void MainGameLoop::run()
 	ModelTexture* grassTexture = new ModelTexture(loader.loadTexture(std::string("grassTexture.png"), GL_RGBA));
 	grassTexture->hasTransparency = true;
 	grassTexture->useFakeLighting = true;
-	grassTexture->shineDamper = 0;
+	grassTexture->shineDamper = 10;
 	grassTexture->reflectivity = 0;
 
 	TexturedModel* texturedGrassModel = new TexturedModel(grassModel, grassTexture);
@@ -87,7 +87,7 @@ void MainGameLoop::run()
 	ModelTexture* fernTexture = new ModelTexture(loader.loadTexture(std::string("fern.png"), GL_RGBA));
 	fernTexture->hasTransparency = true;
 	fernTexture->useFakeLighting = true;
-	fernTexture->shineDamper = 0;
+	fernTexture->shineDamper = 10;
 	fernTexture->reflectivity = 0;
 
 	TexturedModel* texturedFernModel = new TexturedModel(fernModel, fernTexture);
@@ -105,7 +105,7 @@ void MainGameLoop::run()
 	ModelData* treeData = OBJLoader::loadObjModel(std::string("tree"), loader);
 	RawModel* treeModel = loader.loadToVAO(treeData->getVertices(), treeData->getTextureCoords(), treeData->getNormals(), treeData->getIndices());
 	ModelTexture* treeTexture = new ModelTexture(loader.loadTexture(std::string("tree.png"), GL_RGBA));
-	treeTexture->shineDamper = 0;
+	treeTexture->shineDamper = 10;
 	treeTexture->reflectivity = 0;
 
 	TexturedModel* texturedTreeModel = new TexturedModel(treeModel, treeTexture);
